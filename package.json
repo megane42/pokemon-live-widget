@@ -9,6 +9,7 @@
   },
   "devDependencies": {
     "elm": "^0.19.1-5",
+    "firebase-tools": "^10.9.2",
     "vite": "^2.9.9",
     "vite-plugin-elm": "^2.6.1"
   }
