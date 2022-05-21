@@ -1,7 +1,7 @@
 import './style.css'
 import { Elm } from './src/Main.elm'
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, onSnapshot, getDocs, getDoc } from "firebase/firestore";
+import { getFirestore, collection, onSnapshot, getDocs, getDoc, deleteDoc } from "firebase/firestore";
 
 const root = document.querySelector("#app");
 const app = Elm.Main.init({ node: root })
@@ -31,3 +31,12 @@ const unsub = onSnapshot(battleTeamSelectionsCollectionRef, async (battleTeamSel
   console.log(battleTeamPokemons);
   app.ports.receiveBattleTeamPokemons.send(1);
 });
+
+const deleteBattleTeamSelections = async () => {
+  const battleTeamSelectionsCollectionRef = collection(db, "battleTeamSelections");
+  const battleTeamSelectionsQuerySnapshot = await getDocs(battleTeamSelectionsCollectionRef);
+  for (let battleTeamSelectionDocumentSnapshot of battleTeamSelectionsQuerySnapshot.docs) {
+    const battleTeamSelectionDocumentRef = battleTeamSelectionDocumentSnapshot.ref
+    await deleteDoc(battleTeamSelectionDocumentRef);
+  };
+}
