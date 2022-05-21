@@ -1,7 +1,7 @@
 import './style.css'
 import { Elm } from './src/Main.elm'
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDocs, getDoc } from "firebase/firestore";
+import { getFirestore, collection, onSnapshot, getDocs, getDoc } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD9YxMW-T75dZ-pm1QcxjZd6Jt_Yy82aVg",
@@ -16,14 +16,15 @@ const firebaseApp = initializeApp(firebaseConfig);
 const db          = getFirestore(firebaseApp);
 
 const battleTeamSelectionsCollectionRef = collection(db, "battleTeamSelections");
-const battleTeamSelectionsQuerySnapshot = await getDocs(battleTeamSelectionsCollectionRef);
-for (let battleTeamSelectionDocumentSnapshot of battleTeamSelectionsQuerySnapshot.docs) {
-  const teamSelectionDocumentRef      = battleTeamSelectionDocumentSnapshot.data().teamSelection;
-  const teamSelectionDocumentSnapshot = await getDoc(teamSelectionDocumentRef);
-  const pokemonDocumentRef            = teamSelectionDocumentSnapshot.data().pokemon;
-  const pokemonDocumentSnapshot       = await getDoc(pokemonDocumentRef);
-  console.log(pokemonDocumentSnapshot.data())
-};
+const unsub = onSnapshot(battleTeamSelectionsCollectionRef, async (battleTeamSelectionsQuerySnapshot) => {
+  for (let battleTeamSelectionDocumentSnapshot of battleTeamSelectionsQuerySnapshot.docs) {
+    const teamSelectionDocumentRef      = battleTeamSelectionDocumentSnapshot.data().teamSelection;
+    const teamSelectionDocumentSnapshot = await getDoc(teamSelectionDocumentRef);
+    const pokemonDocumentRef            = teamSelectionDocumentSnapshot.data().pokemon;
+    const pokemonDocumentSnapshot       = await getDoc(pokemonDocumentRef);
+    console.log(pokemonDocumentSnapshot.data())
+  };
+});
 
 const root = document.querySelector("#app");
 const app = Elm.Main.init({ node: root })
