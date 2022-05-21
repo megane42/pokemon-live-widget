@@ -4,7 +4,7 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, onSnapshot, getDocs, getDoc, deleteDoc } from "firebase/firestore";
 
 const root = document.querySelector("#app");
-const app = Elm.Main.init({ node: root })
+const elmApp = Elm.Main.init({ node: root })
 
 const firebaseConfig = {
   apiKey: "AIzaSyD9YxMW-T75dZ-pm1QcxjZd6Jt_Yy82aVg",
@@ -18,19 +18,23 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const db          = getFirestore(firebaseApp);
 
-const battleTeamSelectionsCollectionRef = collection(db, "battleTeamSelections");
-const unsub = onSnapshot(battleTeamSelectionsCollectionRef, async (battleTeamSelectionsQuerySnapshot) => {
-  let battleTeamPokemons = [];
-  for (let battleTeamSelectionDocumentSnapshot of battleTeamSelectionsQuerySnapshot.docs) {
-    const teamSelectionDocumentRef      = battleTeamSelectionDocumentSnapshot.data().teamSelection;
-    const teamSelectionDocumentSnapshot = await getDoc(teamSelectionDocumentRef);
-    const pokemonDocumentRef            = teamSelectionDocumentSnapshot.data().pokemon;
-    const pokemonDocumentSnapshot       = await getDoc(pokemonDocumentRef);
-    battleTeamPokemons.push(pokemonDocumentSnapshot.data());
-  };
-  console.log(battleTeamPokemons);
-  app.ports.receiveBattleTeamPokemons.send(1);
-});
+const subscribeBattleTeamSelection = async (onChangeHandler) => {
+  const battleTeamSelectionsCollectionRef = collection(db, "battleTeamSelections");
+  const unsub = onSnapshot(battleTeamSelectionsCollectionRef, async (battleTeamSelectionsQuerySnapshot) => {
+    let battleTeamPokemons = [];
+    for (let battleTeamSelectionDocumentSnapshot of battleTeamSelectionsQuerySnapshot.docs) {
+      const teamSelectionDocumentRef      = battleTeamSelectionDocumentSnapshot.data().teamSelection;
+      const teamSelectionDocumentSnapshot = await getDoc(teamSelectionDocumentRef);
+      const pokemonDocumentRef            = teamSelectionDocumentSnapshot.data().pokemon;
+      const pokemonDocumentSnapshot       = await getDoc(pokemonDocumentRef);
+      battleTeamPokemons.push(pokemonDocumentSnapshot.data());
+    };
+    console.log(battleTeamPokemons);
+    onChangeHandler(1);
+  });
+};
+
+subscribeBattleTeamSelection(elmApp.ports.receiveBattleTeamPokemons.send);
 
 const deleteBattleTeamSelections = async () => {
   const battleTeamSelectionsCollectionRef = collection(db, "battleTeamSelections");
