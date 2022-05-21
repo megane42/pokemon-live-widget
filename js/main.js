@@ -1,5 +1,5 @@
-import './style.css'
-import { Elm } from './src/Main.elm'
+import              '../css/style.css'
+import { Elm } from '../src/Main.elm'
 import {
   subscribeBattleTeamSelection,
   deleteBattleTeamSelections,
