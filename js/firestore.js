@@ -13,6 +13,7 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const db          = getFirestore(firebaseApp);
 
+const teamSelectionsCollectionRef       = collection(db, "teamSelections");
 const battleTeamSelectionsCollectionRef = collection(db, "battleTeamSelections");
 
 const subscribeBattleTeamSelection = async (onChangeHandler) => {
@@ -38,4 +39,18 @@ const deleteBattleTeamSelections = async () => {
   };
 }
 
-export { subscribeBattleTeamSelection, deleteBattleTeamSelections }
+const getTeam = async () => {
+  const teamSelectionsQuerySnapshot = await getDocs(teamSelectionsCollectionRef);
+  return await Promise.all(
+    teamSelectionsQuerySnapshot.docs.map(async (teamSelectionDocumentSnapshot) => {
+      const pokemonDocumentRef      = teamSelectionDocumentSnapshot.data().pokemon;
+      const pokemonDocumentSnapshot = await getDoc(pokemonDocumentRef);
+      return {
+        ...teamSelectionDocumentSnapshot.data(),
+        pokemon: pokemonDocumentSnapshot.data(),
+      };
+    }),
+  );
+}
+
+export { subscribeBattleTeamSelection, deleteBattleTeamSelections, getTeam }
