@@ -18,18 +18,25 @@ const battleTeamSelectionsCollectionRef = collection(db, "battleTeamSelections")
 
 const subscribeBattleTeamSelection = async (onChangeHandler) => {
   const unsub = onSnapshot(battleTeamSelectionsCollectionRef, async (battleTeamSelectionsQuerySnapshot) => {
-    let battleTeamPokemons = [];
-    for (let battleTeamSelectionDocumentSnapshot of battleTeamSelectionsQuerySnapshot.docs) {
-      const teamSelectionDocumentRef      = battleTeamSelectionDocumentSnapshot.data().teamSelection;
-      const teamSelectionDocumentSnapshot = await getDoc(teamSelectionDocumentRef);
-      const pokemonDocumentRef            = teamSelectionDocumentSnapshot.data().pokemon;
-      const pokemonDocumentSnapshot       = await getDoc(pokemonDocumentRef);
-      battleTeamPokemons.push(pokemonDocumentSnapshot.data());
-    };
-    console.log(battleTeamPokemons);
-    onChangeHandler(1);
-  });
-};
+    const battleTeam = await Promise.all(
+      battleTeamSelectionsQuerySnapshot.docs.map(async (battleTeamSelectionDocumentSnapshot) => {
+        const teamSelectionDocumentRef      = battleTeamSelectionDocumentSnapshot.data().teamSelection;
+        const teamSelectionDocumentSnapshot = await getDoc(teamSelectionDocumentRef);
+        const pokemonDocumentRef            = teamSelectionDocumentSnapshot.data().pokemon;
+        const pokemonDocumentSnapshot       = await getDoc(pokemonDocumentRef);
+        return {
+          ...battleTeamSelectionDocumentSnapshot.data(),
+          teamSelection: {
+            ...teamSelectionDocumentSnapshot.data(),
+            pokemon: pokemonDocumentSnapshot.data(),
+          },
+        };
+      }),
+    )
+    console.log(JSON.stringify(battleTeam));
+    onChangeHandler(1); // TODO: pass battleTeam
+  })
+}
 
 const deleteBattleTeamSelections = async () => {
   const battleTeamSelectionsQuerySnapshot = await getDocs(battleTeamSelectionsCollectionRef);
