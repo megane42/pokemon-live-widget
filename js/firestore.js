@@ -38,14 +38,6 @@ const subscribeBattleTeamSelection = async (onChangeHandler) => {
   })
 }
 
-const deleteBattleTeamSelections = async () => {
-  const battleTeamSelectionsQuerySnapshot = await getDocs(battleTeamSelectionsCollectionRef);
-  for (let battleTeamSelectionDocumentSnapshot of battleTeamSelectionsQuerySnapshot.docs) {
-    const battleTeamSelectionDocumentRef = battleTeamSelectionDocumentSnapshot.ref
-    await deleteDoc(battleTeamSelectionDocumentRef);
-  };
-}
-
 const getTeam = async () => {
   const teamSelectionsQuerySnapshot = await getDocs(teamSelectionsCollectionRef);
   return await Promise.all(
@@ -58,6 +50,14 @@ const getTeam = async () => {
       };
     }),
   );
+}
+
+const deleteBattleTeamSelections = async () => {
+  const battleTeamSelectionsQuerySnapshot = await getDocs(battleTeamSelectionsCollectionRef);
+  for (let battleTeamSelectionDocumentSnapshot of battleTeamSelectionsQuerySnapshot.docs) {
+    const battleTeamSelectionDocumentRef = battleTeamSelectionDocumentSnapshot.ref
+    await deleteDoc(battleTeamSelectionDocumentRef);
+  };
 }
 
 export { subscribeBattleTeamSelection, deleteBattleTeamSelections, getTeam }
