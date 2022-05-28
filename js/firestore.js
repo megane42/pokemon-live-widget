@@ -13,6 +13,7 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const db          = getFirestore(firebaseApp);
 
+const pokemonsCollectionRef          = collection(db, "pokemons");
 const teamMembersCollectionRef       = collection(db, "teamMembers");
 const battleTeamMembersCollectionRef = collection(db, "battleTeamMembers");
 
@@ -52,6 +53,11 @@ const getTeamMembers = async () => {
   );
 }
 
+const getPokemons = async () => {
+  const pokemonsQuerySnapshot = await getDocs(pokemonsCollectionRef);
+  return pokemonsQuerySnapshot.docs.map(pokemonDocumentSnapshot => pokemonDocumentSnapshot.data());
+}
+
 const deleteBattleTeamMembers = async () => {
   const battleTeamMembersQuerySnapshot = await getDocs(battleTeamMembersCollectionRef);
   for (let battleTeamMemberDocumentSnapshot of battleTeamMembersQuerySnapshot.docs) {
@@ -60,4 +66,4 @@ const deleteBattleTeamMembers = async () => {
   };
 }
 
-export { subscribeBattleTeamMembers, deleteBattleTeamMembers, getTeamMembers }
+export { subscribeBattleTeamMembers, deleteBattleTeamMembers, getPokemons, getTeamMembers  }
