@@ -44,16 +44,14 @@ const subscribeBattleTeamMembers = async (onChangeHandler) => {
   })
 }
 
-const setBattleTeamMembers = async (battleTeamMembers) => {
-  battleTeamMembers.forEach(async battleTeamMember => {
-    const battleTeamMemberDocumentRef = doc(db, "battleTeamMembers", battleTeamMember.id);
-    const teamMemberDocumentRef       = doc(db, "teamMembers", battleTeamMember.teamMember.id);
-    await setDoc(battleTeamMemberDocumentRef, {
-      living:     battleTeamMember.living,
-      order:      battleTeamMember.order,
-      teamMember: teamMemberDocumentRef,
-    });
-  })
+const setBattleTeamMember = async (battleTeamMember) => {
+  const battleTeamMemberDocumentRef = doc(db, "battleTeamMembers", battleTeamMember.id);
+  const teamMemberDocumentRef       = doc(db, "teamMembers", battleTeamMember.teamMember.id);
+  await setDoc(battleTeamMemberDocumentRef, {
+    living:     battleTeamMember.living,
+    order:      battleTeamMember.order,
+    teamMember: teamMemberDocumentRef,
+  });
 }
 
 const getTeamMembers = async () => {
@@ -74,14 +72,12 @@ const getTeamMembers = async () => {
   );
 }
 
-const setTeamMembers = async (teamMembers) => {
-  teamMembers.forEach(async teamMember => {
-    const teamMemberDocumentRef = doc(db, "teamMembers", teamMember.id);
-    const pokemonDocumentRef    = doc(db, "pokemons", teamMember.pokemon.id);
-    await setDoc(teamMemberDocumentRef, {
-      pokemon: pokemonDocumentRef,
-    });
-  })
+const setTeamMember = async (teamMember) => {
+  const teamMemberDocumentRef = doc(db, "teamMembers", teamMember.id);
+  const pokemonDocumentRef    = doc(db, "pokemons", teamMember.pokemon.id);
+  await setDoc(teamMemberDocumentRef, {
+    pokemon: pokemonDocumentRef,
+  });
 }
 
 const getPokemons = async () => {
@@ -106,9 +102,9 @@ const deleteBattleTeamMembers = async () => {
 
 export {
   subscribeBattleTeamMembers,
-  setBattleTeamMembers,
+  setBattleTeamMember,
   deleteBattleTeamMembers,
   getPokemons,
   getTeamMembers,
-  setTeamMembers,
+  setTeamMember,
 }

@@ -2,11 +2,11 @@ import              '../css/style.css'
 import { Elm } from '../src/Main.elm'
 import {
   subscribeBattleTeamMembers,
-  setBattleTeamMembers,
+  setBattleTeamMember,
   deleteBattleTeamMembers,
   getPokemons,
   getTeamMembers,
-  setTeamMembers,
+  setTeamMember,
 } from './firestore.js'
 
 const root = document.querySelector("#app");
@@ -16,5 +16,5 @@ subscribeBattleTeamMembers(elmApp.ports.receiveBattleTeamPokemons.send);
 
 console.log(await getPokemons())
 console.log(await getTeamMembers())
-// console.log(await setBattleTeamMembers([{ id: "foo", living: true, order: 99, teamMember: { id: "gHRfZU6eMeMMSCFRAN0s" }}]))
-// console.log(await setTeamMembers([{ id: "foo", pokemon: { id: "b1CdXPDL5djSvB8PjdNF" }}]))
+// console.log(await setBattleTeamMember({ id: "bar", living: true, order: 99, teamMember: { id: "gHRfZU6eMeMMSCFRAN0s" }}))
+// console.log(await setTeamMember({ id: "bar", pokemon: { id: "b1CdXPDL5djSvB8PjdNF" }}))
