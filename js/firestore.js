@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, onSnapshot, getDocs, getDoc, deleteDoc } from "firebase/firestore";
+import { getFirestore, doc, collection, onSnapshot, getDocs, getDoc, setDoc, deleteDoc } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey:            "AIzaSyD9YxMW-T75dZ-pm1QcxjZd6Jt_Yy82aVg",
@@ -44,6 +44,18 @@ const subscribeBattleTeamMembers = async (onChangeHandler) => {
   })
 }
 
+const setBattleTeamMembers = async (battleTeamMembers) => {
+  battleTeamMembers.forEach(async battleTeamMember => {
+    const battleTeamMemberDocumentRef = doc(db, "battleTeamMembers", battleTeamMember.id);
+    const teamMemberDocumentRef       = doc(db, "teamMembers", battleTeamMember.teamMember.id);
+    await setDoc(battleTeamMemberDocumentRef, {
+      living:     battleTeamMember.living,
+      order:      battleTeamMember.order,
+      teamMember: teamMemberDocumentRef,
+    });
+  })
+}
+
 const getTeamMembers = async () => {
   const teamMembersQuerySnapshot = await getDocs(teamMembersCollectionRef);
   return await Promise.all(
@@ -82,4 +94,10 @@ const deleteBattleTeamMembers = async () => {
   };
 }
 
-export { subscribeBattleTeamMembers, deleteBattleTeamMembers, getPokemons, getTeamMembers  }
+export {
+  subscribeBattleTeamMembers,
+  setBattleTeamMembers,
+  deleteBattleTeamMembers,
+  getPokemons,
+  getTeamMembers,
+}
