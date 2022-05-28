@@ -74,6 +74,16 @@ const getTeamMembers = async () => {
   );
 }
 
+const setTeamMembers = async (teamMembers) => {
+  teamMembers.forEach(async teamMember => {
+    const teamMemberDocumentRef = doc(db, "teamMembers", teamMember.id);
+    const pokemonDocumentRef    = doc(db, "pokemons", teamMember.pokemon.id);
+    await setDoc(teamMemberDocumentRef, {
+      pokemon: pokemonDocumentRef,
+    });
+  })
+}
+
 const getPokemons = async () => {
   const pokemonsQuerySnapshot = await getDocs(pokemonsCollectionRef);
   return pokemonsQuerySnapshot.docs.map(
@@ -100,4 +110,5 @@ export {
   deleteBattleTeamMembers,
   getPokemons,
   getTeamMembers,
+  setTeamMembers,
 }
