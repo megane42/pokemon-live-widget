@@ -26,15 +26,20 @@ const subscribeBattleTeamMembers = async (onChangeHandler) => {
         const pokemonDocumentRef         = teamMemberDocumentSnapshot.data().pokemon;
         const pokemonDocumentSnapshot    = await getDoc(pokemonDocumentRef);
         return {
+          id: battleTeamMemberDocumentSnapshot.id,
           ...battleTeamMemberDocumentSnapshot.data(),
           teamMember: {
+            id: teamMemberDocumentSnapshot.id,
             ...teamMemberDocumentSnapshot.data(),
-            pokemon: pokemonDocumentSnapshot.data(),
+            pokemon: {
+              id: pokemonDocumentSnapshot.id,
+              ...pokemonDocumentSnapshot.data(),
+            }
           },
         };
       }),
     )
-    console.log(JSON.stringify(battleTeamMembers));
+    console.log(battleTeamMembers);
     onChangeHandler(1); // TODO: pass battleTeam
   })
 }
@@ -46,8 +51,12 @@ const getTeamMembers = async () => {
       const pokemonDocumentRef      = teamMemberDocumentSnapshot.data().pokemon;
       const pokemonDocumentSnapshot = await getDoc(pokemonDocumentRef);
       return {
+        id: teamMemberDocumentSnapshot.id,
         ...teamMemberDocumentSnapshot.data(),
-        pokemon: pokemonDocumentSnapshot.data(),
+        pokemon: {
+          id: pokemonDocumentSnapshot.id,
+          ...pokemonDocumentSnapshot.data(),
+        },
       };
     }),
   );
@@ -55,7 +64,14 @@ const getTeamMembers = async () => {
 
 const getPokemons = async () => {
   const pokemonsQuerySnapshot = await getDocs(pokemonsCollectionRef);
-  return pokemonsQuerySnapshot.docs.map(pokemonDocumentSnapshot => pokemonDocumentSnapshot.data());
+  return pokemonsQuerySnapshot.docs.map(
+    pokemonDocumentSnapshot => {
+      return {
+        id: pokemonDocumentSnapshot.id,
+        ...pokemonDocumentSnapshot.data(),
+      }
+    }
+  );
 }
 
 const deleteBattleTeamMembers = async () => {
