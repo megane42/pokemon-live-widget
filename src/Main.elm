@@ -1,7 +1,7 @@
 port module Main exposing (main)
 
 import Browser
-import Html exposing (Html, button, div, hr, li, text, ul)
+import Html exposing (Html, button, div, h2, hr, li, text, ul)
 import Html.Attributes exposing (style)
 import Html.Events exposing (onClick)
 
@@ -134,9 +134,9 @@ subscriptions _ =
 -- VIEW
 
 
-battleTeamMembersDisplayList : List BattleTeamMember -> Html msg
+battleTeamMembersDisplayList : List BattleTeamMember -> List (Html msg)
 battleTeamMembersDisplayList battleTeamMembers =
-    ul
+    [ ul
         []
         (List.map
             (\battleTeamMember ->
@@ -153,11 +153,13 @@ battleTeamMembersDisplayList battleTeamMembers =
             )
             battleTeamMembers
         )
+    ]
 
 
-battleTeamMembersControlList : List BattleTeamMember -> Html Msg
+battleTeamMembersControlList : List BattleTeamMember -> List (Html Msg)
 battleTeamMembersControlList battleTeamMembers =
-    ul
+    [ h2 [] [ text "選出パーティ管理" ]
+    , ul
         []
         (List.map
             (\battleTeamMember ->
@@ -169,11 +171,13 @@ battleTeamMembersControlList battleTeamMembers =
             )
             battleTeamMembers
         )
+    ]
 
 
-teamMembersControlList : List TeamMember -> Html Msg
+teamMembersControlList : List TeamMember -> List (Html Msg)
 teamMembersControlList teamMembers =
-    ul
+    [ h2 [] [ text "パーティ管理" ]
+    , ul
         []
         (List.map
             (\teamMember ->
@@ -184,11 +188,13 @@ teamMembersControlList teamMembers =
             )
             teamMembers
         )
+    ]
 
 
-pokemonsControlList : List Pokemon -> Html Msg
+pokemonsControlList : List Pokemon -> List (Html Msg)
 pokemonsControlList pokemons =
-    ul
+    [ h2 [] [ text "ポケモン管理" ]
+    , ul
         []
         (List.map
             (\pokemon ->
@@ -199,24 +205,21 @@ pokemonsControlList pokemons =
             )
             pokemons
         )
+    ]
 
 
 view : Model -> Html Msg
 view model =
     div []
         [ div []
-            [ battleTeamMembersDisplayList model.battleTeamMembers
-            ]
+            (battleTeamMembersDisplayList model.battleTeamMembers)
         , hr [] []
         , div []
-            [ battleTeamMembersControlList model.battleTeamMembers
-            ]
+            (battleTeamMembersControlList model.battleTeamMembers)
         , hr [] []
         , div []
-            [ teamMembersControlList model.teamMembers
-            ]
+            (teamMembersControlList model.teamMembers)
         , hr [] []
         , div []
-            [ pokemonsControlList model.pokemons
-            ]
+            (pokemonsControlList model.pokemons)
         ]
