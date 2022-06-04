@@ -1,7 +1,7 @@
 port module Main exposing (main)
 
 import Browser
-import Html exposing (Html, div, li, text, ul)
+import Html exposing (Html, button, div, hr, li, text, ul)
 
 
 main : Program () Model Msg
@@ -75,17 +75,41 @@ subscriptions _ =
 -- VIEW
 
 
-battleTeamMembersListItem : BattleTeamMember -> Html msg
-battleTeamMembersListItem battleTeamMember =
+battleTeamMembersDisplayList : List BattleTeamMember -> Html msg
+battleTeamMembersDisplayList battleTeamMembers =
+    ul
+        []
+        (List.map battleTeamMembersDisplayListItem battleTeamMembers)
+
+
+battleTeamMembersDisplayListItem : BattleTeamMember -> Html msg
+battleTeamMembersDisplayListItem battleTeamMember =
     li [] [ text battleTeamMember.teamMember.pokemon.name ]
+
+
+battleTeamMembersControlList : List BattleTeamMember -> Html msg
+battleTeamMembersControlList battleTeamMembers =
+    ul
+        []
+        (List.map battleTeamMembersControlListItem battleTeamMembers)
+
+
+battleTeamMembersControlListItem : BattleTeamMember -> Html msg
+battleTeamMembersControlListItem battleTeamMember =
+    li []
+        [ text battleTeamMember.teamMember.pokemon.name
+        , button [] [ text "ひんしにする" ]
+        ]
 
 
 view : Model -> Html Msg
 view model =
     div []
         [ div []
-            [ ul
-                []
-                (List.map battleTeamMembersListItem model.battleTeamMembers)
+            [ battleTeamMembersDisplayList model.battleTeamMembers
+            ]
+        , hr [] []
+        , div []
+            [ battleTeamMembersControlList model.battleTeamMembers
             ]
         ]
