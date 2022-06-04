@@ -45,8 +45,11 @@ const subscribeBattleTeamMembers = async (onChangeHandler) => {
 }
 
 const setBattleTeamMember = async (battleTeamMember) => {
-  const battleTeamMemberDocumentRef = doc(db, "battleTeamMembers", battleTeamMember.id);
+  const battleTeamMemberDocumentRef = battleTeamMember.id == "__RANDOM_ID__"
+                                    ? doc(battleTeamMembersCollectionRef)
+                                    : doc(db, "battleTeamMembers", battleTeamMember.id);
   const teamMemberDocumentRef       = doc(db, "teamMembers", battleTeamMember.teamMember.id);
+
   await setDoc(battleTeamMemberDocumentRef, {
     living:     battleTeamMember.living,
     order:      battleTeamMember.order,

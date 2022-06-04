@@ -44,6 +44,7 @@ type alias Model =
     { battleTeamMembers : List BattleTeamMember
     , teamMembers : List TeamMember
     , pokemons : List Pokemon
+    , pickIndex : Int
     }
 
 
@@ -52,6 +53,7 @@ init _ =
     ( { battleTeamMembers = []
       , teamMembers = []
       , pokemons = []
+      , pickIndex = 1
       }
     , Cmd.none
     )
@@ -67,6 +69,7 @@ type Msg
     | GetPokemons (List Pokemon)
     | FaintBattleTeamMember BattleTeamMember
     | ReviveBattleTeamMember BattleTeamMember
+    | PickTeamMemberAsBattleTeamMember TeamMember
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -86,6 +89,9 @@ update msg model =
 
         ReviveBattleTeamMember battleTeamMember ->
             ( model, setBattleTeamMember { battleTeamMember | living = True } )
+
+        PickTeamMemberAsBattleTeamMember teamMember ->
+            ( { model | pickIndex = model.pickIndex + 1 }, setBattleTeamMember (BattleTeamMember "__RANDOM_ID__" True model.pickIndex teamMember) )
 
 
 
@@ -158,6 +164,21 @@ battleTeamMembersControlListItem battleTeamMember =
         ]
 
 
+teamMembersControlList : List TeamMember -> Html Msg
+teamMembersControlList teamMembers =
+    ul
+        []
+        (List.map teamMembersControlListItem teamMembers)
+
+
+teamMembersControlListItem : TeamMember -> Html Msg
+teamMembersControlListItem teamMember =
+    li []
+        [ text teamMember.pokemon.name
+        , button [ onClick (PickTeamMemberAsBattleTeamMember teamMember) ] [ text "選出する" ]
+        ]
+
+
 view : Model -> Html Msg
 view model =
     div []
@@ -167,5 +188,9 @@ view model =
         , hr [] []
         , div []
             [ battleTeamMembersControlList model.battleTeamMembers
+            ]
+        , hr [] []
+        , div []
+            [ teamMembersControlList model.teamMembers
             ]
         ]
