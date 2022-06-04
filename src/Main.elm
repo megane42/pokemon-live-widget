@@ -1,8 +1,7 @@
 port module Main exposing (main)
 
 import Browser
-import Html exposing (Html, button, div, text)
-import Html.Events exposing (onClick)
+import Html exposing (Html, div, li, text, ul)
 
 
 main : Program () Model Msg
@@ -15,46 +14,78 @@ main =
         }
 
 
+
+-- MODEL
+
+
+type alias Pokemon =
+    { name : String
+    }
+
+
+type alias TeamMember =
+    { pokemon : Pokemon
+    }
+
+
+type alias BattleTeamMember =
+    { living : Bool
+    , order : Int
+    , teamMember : TeamMember
+    }
+
+
 type alias Model =
-    Int
+    List BattleTeamMember
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( 0, Cmd.none )
+    ( [], Cmd.none )
+
+
+
+-- UPDATE
 
 
 type Msg
-    = Increment
-    | Decrement
-    | ReceiveBattleTeamPokemons Int
+    = ReceiveBattleTeamMembers (List BattleTeamMember)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Increment ->
-            ( model + 1, Cmd.none )
-
-        Decrement ->
-            ( model - 1, Cmd.none )
-
-        ReceiveBattleTeamPokemons _ ->
-            ( model, Cmd.none )
+        ReceiveBattleTeamMembers newBattleTeamMember ->
+            ( newBattleTeamMember, Cmd.none )
 
 
-port receiveBattleTeamPokemons : (Int -> msg) -> Sub msg
+
+-- SUBSCRIPTIONS
+
+
+port receiveBattleTeamPokemons : (List BattleTeamMember -> msg) -> Sub msg
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    receiveBattleTeamPokemons ReceiveBattleTeamPokemons
+    receiveBattleTeamPokemons ReceiveBattleTeamMembers
+
+
+
+-- VIEW
+
+
+battleTeamMembersListItem : BattleTeamMember -> Html msg
+battleTeamMembersListItem battleTeamMember =
+    li [] [ text battleTeamMember.teamMember.pokemon.name ]
 
 
 view : Model -> Html Msg
 view model =
     div []
-        [ button [ onClick Increment ] [ text "+" ]
-        , text <| "Count is: " ++ String.fromInt model
-        , button [ onClick Decrement ] [ text "-" ]
+        [ div []
+            [ ul
+                []
+                (List.map battleTeamMembersListItem model)
+            ]
         ]
