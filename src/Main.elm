@@ -36,12 +36,12 @@ type alias BattleTeamMember =
 
 
 type alias Model =
-    List BattleTeamMember
+    { battleTeamMembers : List BattleTeamMember }
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( [], Cmd.none )
+    ( { battleTeamMembers = [] }, Cmd.none )
 
 
 
@@ -55,8 +55,8 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        ReceiveBattleTeamMembers newBattleTeamMember ->
-            ( newBattleTeamMember, Cmd.none )
+        ReceiveBattleTeamMembers newBattleTeamMembers ->
+            ( { battleTeamMembers = newBattleTeamMembers }, Cmd.none )
 
 
 
@@ -86,6 +86,6 @@ view model =
         [ div []
             [ ul
                 []
-                (List.map battleTeamMembersListItem model)
+                (List.map battleTeamMembersListItem model.battleTeamMembers)
             ]
         ]
