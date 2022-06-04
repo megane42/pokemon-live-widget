@@ -2,6 +2,7 @@ port module Main exposing (main)
 
 import Browser
 import Html exposing (Html, button, div, hr, li, text, ul)
+import Html.Attributes exposing (style)
 
 
 main : Program () Model Msg
@@ -84,7 +85,16 @@ battleTeamMembersDisplayList battleTeamMembers =
 
 battleTeamMembersDisplayListItem : BattleTeamMember -> Html msg
 battleTeamMembersDisplayListItem battleTeamMember =
-    li [] [ text battleTeamMember.teamMember.pokemon.name ]
+    li
+        [ style "text-decoration-line"
+            (if battleTeamMember.living then
+                "none"
+
+             else
+                "line-through"
+            )
+        ]
+        [ text battleTeamMember.teamMember.pokemon.name ]
 
 
 battleTeamMembersControlList : List BattleTeamMember -> Html msg
