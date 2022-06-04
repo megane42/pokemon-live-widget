@@ -3,6 +3,7 @@ port module Main exposing (main)
 import Browser
 import Html exposing (Html, button, div, hr, li, text, ul)
 import Html.Attributes exposing (style)
+import Html.Events exposing (onClick)
 
 
 main : Program () Model Msg
@@ -20,17 +21,20 @@ main =
 
 
 type alias Pokemon =
-    { name : String
+    { id : String
+    , name : String
     }
 
 
 type alias TeamMember =
-    { pokemon : Pokemon
+    { id : String
+    , pokemon : Pokemon
     }
 
 
 type alias BattleTeamMember =
-    { living : Bool
+    { id : String
+    , living : Bool
     , order : Int
     , teamMember : TeamMember
     }
@@ -51,6 +55,8 @@ init _ =
 
 type Msg
     = ReceiveBattleTeamMembers (List BattleTeamMember)
+    | FaintBattleTeamMember BattleTeamMember
+    | ReviveBattleTeamMember BattleTeamMember
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -59,12 +65,25 @@ update msg model =
         ReceiveBattleTeamMembers newBattleTeamMembers ->
             ( { battleTeamMembers = newBattleTeamMembers }, Cmd.none )
 
+        FaintBattleTeamMember battleTeamMember ->
+            ( model, setBattleTeamMember { battleTeamMember | living = False } )
+
+        ReviveBattleTeamMember battleTeamMember ->
+            ( model, setBattleTeamMember { battleTeamMember | living = True } )
 
 
--- SUBSCRIPTIONS
+
+-- PORTS
 
 
 port receiveBattleTeamPokemons : (List BattleTeamMember -> msg) -> Sub msg
+
+
+port setBattleTeamMember : BattleTeamMember -> Cmd msg
+
+
+
+-- SUBSCRIPTIONS
 
 
 subscriptions : Model -> Sub Msg
@@ -97,18 +116,19 @@ battleTeamMembersDisplayListItem battleTeamMember =
         [ text battleTeamMember.teamMember.pokemon.name ]
 
 
-battleTeamMembersControlList : List BattleTeamMember -> Html msg
+battleTeamMembersControlList : List BattleTeamMember -> Html Msg
 battleTeamMembersControlList battleTeamMembers =
     ul
         []
         (List.map battleTeamMembersControlListItem battleTeamMembers)
 
 
-battleTeamMembersControlListItem : BattleTeamMember -> Html msg
+battleTeamMembersControlListItem : BattleTeamMember -> Html Msg
 battleTeamMembersControlListItem battleTeamMember =
     li []
         [ text battleTeamMember.teamMember.pokemon.name
-        , button [] [ text "ひんしにする" ]
+        , button [ onClick (FaintBattleTeamMember battleTeamMember) ] [ text "ひんしにする" ]
+        , button [ onClick (ReviveBattleTeamMember battleTeamMember) ] [ text "げんきにする" ]
         ]
 
 

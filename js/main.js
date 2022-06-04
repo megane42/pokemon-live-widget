@@ -12,4 +12,8 @@ import {
 const root = document.querySelector("#app");
 const elmApp = Elm.Main.init({ node: root })
 
+elmApp.ports.setBattleTeamMember.subscribe((battleTeamMember) => {
+  setBattleTeamMember(battleTeamMember)
+})
+
 subscribeBattleTeamMembers(elmApp.ports.receiveBattleTeamPokemons.send);

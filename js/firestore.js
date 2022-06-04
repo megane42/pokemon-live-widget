@@ -40,7 +40,7 @@ const subscribeBattleTeamMembers = async (onChangeHandler) => {
       }),
     )
     console.log(battleTeamMembers);
-    onChangeHandler(battleTeamMembers); // TODO: pass battleTeam
+    onChangeHandler(battleTeamMembers);
   })
 }
 
