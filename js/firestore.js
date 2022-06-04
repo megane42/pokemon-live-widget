@@ -87,7 +87,9 @@ const subscribeTeamMembers = async (onChangeHandler) => {
 }
 
 const setTeamMember = async (teamMember) => {
-  const teamMemberDocumentRef = doc(db, "teamMembers", teamMember.id);
+  const teamMemberDocumentRef = teamMember.id == "__RANDOM_ID__"
+                              ? doc(teamMembersCollectionRef)
+                              : doc(db, "teamMembers", teamMember.id);
   const pokemonDocumentRef    = doc(db, "pokemons", teamMember.pokemon.id);
   await setDoc(teamMemberDocumentRef, {
     pokemon: pokemonDocumentRef,

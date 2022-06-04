@@ -16,6 +16,10 @@ elmApp.ports.setBattleTeamMember.subscribe((battleTeamMember) => {
   setBattleTeamMember(battleTeamMember)
 })
 
+elmApp.ports.setTeamMember.subscribe((teamMember) => {
+  setTeamMember(teamMember)
+})
+
 subscribeBattleTeamMembers(elmApp.ports.getBattleTeamMembers.send);
 subscribeTeamMembers(elmApp.ports.getTeamMembers.send);
 subscribePokemons(elmApp.ports.getPokemons.send);

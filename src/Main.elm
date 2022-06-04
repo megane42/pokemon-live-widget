@@ -70,6 +70,7 @@ type Msg
     | FaintBattleTeamMember BattleTeamMember
     | ReviveBattleTeamMember BattleTeamMember
     | PickTeamMemberAsBattleTeamMember TeamMember
+    | PickPokemonAsTeamMember Pokemon
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -93,6 +94,9 @@ update msg model =
         PickTeamMemberAsBattleTeamMember teamMember ->
             ( { model | pickIndex = model.pickIndex + 1 }, setBattleTeamMember (BattleTeamMember "__RANDOM_ID__" True model.pickIndex teamMember) )
 
+        PickPokemonAsTeamMember pokemon ->
+            ( model, setTeamMember (TeamMember "__RANDOM_ID__" pokemon) )
+
 
 
 -- PORTS
@@ -108,6 +112,9 @@ port getPokemons : (List Pokemon -> msg) -> Sub msg
 
 
 port setBattleTeamMember : BattleTeamMember -> Cmd msg
+
+
+port setTeamMember : TeamMember -> Cmd msg
 
 
 
@@ -179,6 +186,21 @@ teamMembersControlList teamMembers =
         )
 
 
+pokemonsControlList : List Pokemon -> Html Msg
+pokemonsControlList pokemons =
+    ul
+        []
+        (List.map
+            (\pokemon ->
+                li []
+                    [ text pokemon.name
+                    , button [ onClick (PickPokemonAsTeamMember pokemon) ] [ text "パーティに入れる" ]
+                    ]
+            )
+            pokemons
+        )
+
+
 view : Model -> Html Msg
 view model =
     div []
@@ -192,5 +214,9 @@ view model =
         , hr [] []
         , div []
             [ teamMembersControlList model.teamMembers
+            ]
+        , hr [] []
+        , div []
+            [ pokemonsControlList model.pokemons
             ]
         ]
