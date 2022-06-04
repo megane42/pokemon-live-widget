@@ -69,6 +69,7 @@ type Msg
     | GetPokemons (List Pokemon)
     | FaintBattleTeamMember BattleTeamMember
     | ReviveBattleTeamMember BattleTeamMember
+    | ResetBattleTeamMember
     | PickTeamMemberAsBattleTeamMember TeamMember
     | PickPokemonAsTeamMember Pokemon
 
@@ -91,6 +92,9 @@ update msg model =
         ReviveBattleTeamMember battleTeamMember ->
             ( model, setBattleTeamMember { battleTeamMember | living = True } )
 
+        ResetBattleTeamMember ->
+            ( { model | pickIndex = 1 }, deleteBattleTeamMember () )
+
         PickTeamMemberAsBattleTeamMember teamMember ->
             ( { model | pickIndex = model.pickIndex + 1 }, setBattleTeamMember (BattleTeamMember "__RANDOM_ID__" True model.pickIndex teamMember) )
 
@@ -112,6 +116,9 @@ port getPokemons : (List Pokemon -> msg) -> Sub msg
 
 
 port setBattleTeamMember : BattleTeamMember -> Cmd msg
+
+
+port deleteBattleTeamMember : () -> Cmd msg
 
 
 port setTeamMember : TeamMember -> Cmd msg
@@ -171,6 +178,7 @@ battleTeamMembersControlList battleTeamMembers =
             )
             battleTeamMembers
         )
+    , button [ onClick ResetBattleTeamMember ] [ text "選出しなおす" ]
     ]
 
 

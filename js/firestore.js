@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, doc, collection, onSnapshot, getDocs, getDoc, setDoc, deleteDoc } from "firebase/firestore";
+import { getFirestore, doc, collection, onSnapshot, getDocs, getDoc, setDoc, deleteDoc, writeBatch } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey:            "AIzaSyD9YxMW-T75dZ-pm1QcxjZd6Jt_Yy82aVg",
@@ -58,11 +58,13 @@ const setBattleTeamMember = async (battleTeamMember) => {
 }
 
 const deleteBattleTeamMembers = async () => {
+  const batch = writeBatch(db);
   const battleTeamMembersQuerySnapshot = await getDocs(battleTeamMembersCollectionRef);
   for (let battleTeamMemberDocumentSnapshot of battleTeamMembersQuerySnapshot.docs) {
     const battleTeamMemberDocumentRef = battleTeamMemberDocumentSnapshot.ref
-    await deleteDoc(battleTeamMemberDocumentRef);
+    batch.delete(battleTeamMemberDocumentRef);
   };
+  await batch.commit()
 }
 
 const subscribeTeamMembers = async (onChangeHandler) => {

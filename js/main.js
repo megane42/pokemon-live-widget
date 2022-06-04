@@ -16,6 +16,10 @@ elmApp.ports.setBattleTeamMember.subscribe((battleTeamMember) => {
   setBattleTeamMember(battleTeamMember)
 })
 
+elmApp.ports.deleteBattleTeamMember.subscribe(() => {
+  deleteBattleTeamMembers()
+})
+
 elmApp.ports.setTeamMember.subscribe((teamMember) => {
   setTeamMember(teamMember)
 })
