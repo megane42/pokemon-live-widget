@@ -54,7 +54,7 @@ init _ =
 
 
 type Msg
-    = ReceiveBattleTeamMembers (List BattleTeamMember)
+    = GetBattleTeamMembers (List BattleTeamMember)
     | FaintBattleTeamMember BattleTeamMember
     | ReviveBattleTeamMember BattleTeamMember
 
@@ -62,7 +62,7 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        ReceiveBattleTeamMembers newBattleTeamMembers ->
+        GetBattleTeamMembers newBattleTeamMembers ->
             ( { battleTeamMembers = newBattleTeamMembers }, Cmd.none )
 
         FaintBattleTeamMember battleTeamMember ->
@@ -76,7 +76,7 @@ update msg model =
 -- PORTS
 
 
-port receiveBattleTeamPokemons : (List BattleTeamMember -> msg) -> Sub msg
+port getBattleTeamMembers : (List BattleTeamMember -> msg) -> Sub msg
 
 
 port setBattleTeamMember : BattleTeamMember -> Cmd msg
@@ -88,7 +88,7 @@ port setBattleTeamMember : BattleTeamMember -> Cmd msg
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    receiveBattleTeamPokemons ReceiveBattleTeamMembers
+    getBattleTeamMembers GetBattleTeamMembers
 
 
 
