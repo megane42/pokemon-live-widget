@@ -41,12 +41,20 @@ type alias BattleTeamMember =
 
 
 type alias Model =
-    { battleTeamMembers : List BattleTeamMember }
+    { battleTeamMembers : List BattleTeamMember
+    , teamMembers : List TeamMember
+    , pokemons : List Pokemon
+    }
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( { battleTeamMembers = [] }, Cmd.none )
+    ( { battleTeamMembers = []
+      , teamMembers = []
+      , pokemons = []
+      }
+    , Cmd.none
+    )
 
 
 
@@ -55,6 +63,8 @@ init _ =
 
 type Msg
     = GetBattleTeamMembers (List BattleTeamMember)
+    | GetTeamMembers (List TeamMember)
+    | GetPokemons (List Pokemon)
     | FaintBattleTeamMember BattleTeamMember
     | ReviveBattleTeamMember BattleTeamMember
 
@@ -63,7 +73,13 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         GetBattleTeamMembers newBattleTeamMembers ->
-            ( { battleTeamMembers = newBattleTeamMembers }, Cmd.none )
+            ( { model | battleTeamMembers = newBattleTeamMembers }, Cmd.none )
+
+        GetTeamMembers newTeamMembers ->
+            ( { model | teamMembers = newTeamMembers }, Cmd.none )
+
+        GetPokemons newPokemons ->
+            ( { model | pokemons = newPokemons }, Cmd.none )
 
         FaintBattleTeamMember battleTeamMember ->
             ( model, setBattleTeamMember { battleTeamMember | living = False } )
@@ -79,6 +95,12 @@ update msg model =
 port getBattleTeamMembers : (List BattleTeamMember -> msg) -> Sub msg
 
 
+port getTeamMembers : (List TeamMember -> msg) -> Sub msg
+
+
+port getPokemons : (List Pokemon -> msg) -> Sub msg
+
+
 port setBattleTeamMember : BattleTeamMember -> Cmd msg
 
 
@@ -88,7 +110,11 @@ port setBattleTeamMember : BattleTeamMember -> Cmd msg
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    getBattleTeamMembers GetBattleTeamMembers
+    Sub.batch
+        [ getBattleTeamMembers GetBattleTeamMembers
+        , getTeamMembers GetTeamMembers
+        , getPokemons GetPokemons
+        ]
 
 
 
