@@ -131,52 +131,52 @@ battleTeamMembersDisplayList : List BattleTeamMember -> Html msg
 battleTeamMembersDisplayList battleTeamMembers =
     ul
         []
-        (List.map battleTeamMembersDisplayListItem battleTeamMembers)
+        (List.map
+            (\battleTeamMember ->
+                li
+                    [ style "text-decoration-line"
+                        (if battleTeamMember.living then
+                            "none"
 
-
-battleTeamMembersDisplayListItem : BattleTeamMember -> Html msg
-battleTeamMembersDisplayListItem battleTeamMember =
-    li
-        [ style "text-decoration-line"
-            (if battleTeamMember.living then
-                "none"
-
-             else
-                "line-through"
+                         else
+                            "line-through"
+                        )
+                    ]
+                    [ text battleTeamMember.teamMember.pokemon.name ]
             )
-        ]
-        [ text battleTeamMember.teamMember.pokemon.name ]
+            battleTeamMembers
+        )
 
 
 battleTeamMembersControlList : List BattleTeamMember -> Html Msg
 battleTeamMembersControlList battleTeamMembers =
     ul
         []
-        (List.map battleTeamMembersControlListItem battleTeamMembers)
-
-
-battleTeamMembersControlListItem : BattleTeamMember -> Html Msg
-battleTeamMembersControlListItem battleTeamMember =
-    li []
-        [ text battleTeamMember.teamMember.pokemon.name
-        , button [ onClick (FaintBattleTeamMember battleTeamMember) ] [ text "ひんしにする" ]
-        , button [ onClick (ReviveBattleTeamMember battleTeamMember) ] [ text "げんきにする" ]
-        ]
+        (List.map
+            (\battleTeamMember ->
+                li []
+                    [ text battleTeamMember.teamMember.pokemon.name
+                    , button [ onClick (FaintBattleTeamMember battleTeamMember) ] [ text "ひんしにする" ]
+                    , button [ onClick (ReviveBattleTeamMember battleTeamMember) ] [ text "げんきにする" ]
+                    ]
+            )
+            battleTeamMembers
+        )
 
 
 teamMembersControlList : List TeamMember -> Html Msg
 teamMembersControlList teamMembers =
     ul
         []
-        (List.map teamMembersControlListItem teamMembers)
-
-
-teamMembersControlListItem : TeamMember -> Html Msg
-teamMembersControlListItem teamMember =
-    li []
-        [ text teamMember.pokemon.name
-        , button [ onClick (PickTeamMemberAsBattleTeamMember teamMember) ] [ text "選出する" ]
-        ]
+        (List.map
+            (\teamMember ->
+                li []
+                    [ text teamMember.pokemon.name
+                    , button [ onClick (PickTeamMemberAsBattleTeamMember teamMember) ] [ text "選出する" ]
+                    ]
+            )
+            teamMembers
+        )
 
 
 view : Model -> Html Msg
