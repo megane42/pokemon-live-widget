@@ -4,9 +4,9 @@ import {
   subscribeBattleTeamMembers,
   setBattleTeamMember,
   deleteBattleTeamMembers,
-  getPokemons,
   getTeamMembers,
   setTeamMember,
+  getPokemons,
 } from './firestore.js'
 
 const root = document.querySelector("#app");

@@ -54,6 +54,14 @@ const setBattleTeamMember = async (battleTeamMember) => {
   });
 }
 
+const deleteBattleTeamMembers = async () => {
+  const battleTeamMembersQuerySnapshot = await getDocs(battleTeamMembersCollectionRef);
+  for (let battleTeamMemberDocumentSnapshot of battleTeamMembersQuerySnapshot.docs) {
+    const battleTeamMemberDocumentRef = battleTeamMemberDocumentSnapshot.ref
+    await deleteDoc(battleTeamMemberDocumentRef);
+  };
+}
+
 const getTeamMembers = async () => {
   const teamMembersQuerySnapshot = await getDocs(teamMembersCollectionRef);
   return await Promise.all(
@@ -92,19 +100,11 @@ const getPokemons = async () => {
   );
 }
 
-const deleteBattleTeamMembers = async () => {
-  const battleTeamMembersQuerySnapshot = await getDocs(battleTeamMembersCollectionRef);
-  for (let battleTeamMemberDocumentSnapshot of battleTeamMembersQuerySnapshot.docs) {
-    const battleTeamMemberDocumentRef = battleTeamMemberDocumentSnapshot.ref
-    await deleteDoc(battleTeamMemberDocumentRef);
-  };
-}
-
 export {
   subscribeBattleTeamMembers,
   setBattleTeamMember,
   deleteBattleTeamMembers,
-  getPokemons,
   getTeamMembers,
   setTeamMember,
+  getPokemons,
 }
