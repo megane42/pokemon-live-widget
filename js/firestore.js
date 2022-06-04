@@ -62,22 +62,25 @@ const deleteBattleTeamMembers = async () => {
   };
 }
 
-const getTeamMembers = async () => {
-  const teamMembersQuerySnapshot = await getDocs(teamMembersCollectionRef);
-  return await Promise.all(
-    teamMembersQuerySnapshot.docs.map(async (teamMemberDocumentSnapshot) => {
-      const pokemonDocumentRef      = teamMemberDocumentSnapshot.data().pokemon;
-      const pokemonDocumentSnapshot = await getDoc(pokemonDocumentRef);
-      return {
-        id: teamMemberDocumentSnapshot.id,
-        ...teamMemberDocumentSnapshot.data(),
-        pokemon: {
-          id: pokemonDocumentSnapshot.id,
-          ...pokemonDocumentSnapshot.data(),
-        },
-      };
-    }),
-  );
+const subscribeTeamMembers = async (onChangeHandler) => {
+  const unsub = onSnapshot(teamMembersCollectionRef, async (teamMembersQuerySnapshot) => {
+    const teamMembers = await Promise.all(
+      teamMembersQuerySnapshot.docs.map(async (teamMemberDocumentSnapshot) => {
+        const pokemonDocumentRef      = teamMemberDocumentSnapshot.data().pokemon;
+        const pokemonDocumentSnapshot = await getDoc(pokemonDocumentRef);
+        return {
+          id: teamMemberDocumentSnapshot.id,
+          ...teamMemberDocumentSnapshot.data(),
+          pokemon: {
+            id: pokemonDocumentSnapshot.id,
+            ...pokemonDocumentSnapshot.data(),
+          },
+        };
+      }),
+    );
+    console.log(teamMembers);
+    onChangeHandler(teamMembers);
+  })
 }
 
 const setTeamMember = async (teamMember) => {
@@ -88,23 +91,26 @@ const setTeamMember = async (teamMember) => {
   });
 }
 
-const getPokemons = async () => {
-  const pokemonsQuerySnapshot = await getDocs(pokemonsCollectionRef);
-  return pokemonsQuerySnapshot.docs.map(
-    pokemonDocumentSnapshot => {
-      return {
-        id: pokemonDocumentSnapshot.id,
-        ...pokemonDocumentSnapshot.data(),
+const subscribePokemons = async (onChangeHandler) => {
+  const unsub = onSnapshot(pokemonsCollectionRef, async (pokemonsQuerySnapshot) => {
+    const pokemons = pokemonsQuerySnapshot.docs.map(
+      pokemonDocumentSnapshot => {
+        return {
+          id: pokemonDocumentSnapshot.id,
+          ...pokemonDocumentSnapshot.data(),
+        }
       }
-    }
-  );
+    );
+    console.log(pokemons);
+    onChangeHandler(pokemons);
+  })
 }
 
 export {
   subscribeBattleTeamMembers,
   setBattleTeamMember,
   deleteBattleTeamMembers,
-  getTeamMembers,
+  subscribeTeamMembers,
   setTeamMember,
-  getPokemons,
+  subscribePokemons,
 }
