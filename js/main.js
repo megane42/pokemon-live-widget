@@ -1,3 +1,4 @@
+import 'sanitize.css';
 import              '../css/style.css'
 import { Elm } from '../src/Main.elm'
 import {
