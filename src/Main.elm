@@ -190,9 +190,10 @@ battleTeamMembersDisplay : PokemonDetailCategory -> List BattleTeamMember -> Lis
 battleTeamMembersDisplay pokemonDetail battleTeamMembers =
     [ div
         [ class "battleTeamMembersDisplay" ]
-        (List.map
-            (battleTeamMembersDisplayItem pokemonDetail)
-            battleTeamMembers
+        (battleTeamMembers
+            |> List.sortBy .order
+            |> List.map
+                (battleTeamMembersDisplayItem pokemonDetail)
         )
     ]
 
@@ -233,15 +234,16 @@ battleTeamMembersControl battleTeamMembers =
     [ h2 [] [ text "選出パーティ管理" ]
     , ul
         []
-        (List.map
-            (\battleTeamMember ->
-                li []
-                    [ text battleTeamMember.teamMember.pokemon.name
-                    , button [ onClick (FaintBattleTeamMember battleTeamMember) ] [ text "ひんしにする" ]
-                    , button [ onClick (ReviveBattleTeamMember battleTeamMember) ] [ text "げんきにする" ]
-                    ]
-            )
-            battleTeamMembers
+        (battleTeamMembers
+            |> List.sortBy .order
+            |> List.map
+                (\battleTeamMember ->
+                    li []
+                        [ text battleTeamMember.teamMember.pokemon.name
+                        , button [ onClick (FaintBattleTeamMember battleTeamMember) ] [ text "ひんしにする" ]
+                        , button [ onClick (ReviveBattleTeamMember battleTeamMember) ] [ text "げんきにする" ]
+                        ]
+                )
         )
     , button [ onClick ResetBattleTeamMember ] [ text "選出しなおす" ]
     ]
