@@ -39,7 +39,7 @@ const subscribeBattleTeamMembers = async (onChangeHandler) => {
         };
       }),
     )
-    console.log(battleTeamMembers);
+    console.log("battleTeamMembers", battleTeamMembers);
     onChangeHandler(battleTeamMembers);
   })
 }
@@ -83,7 +83,7 @@ const subscribeTeamMembers = async (onChangeHandler) => {
         };
       }),
     );
-    console.log(teamMembers);
+    console.log("teamMembers", teamMembers);
     onChangeHandler(teamMembers);
   })
 }
@@ -108,7 +108,7 @@ const subscribePokemons = async (onChangeHandler) => {
         }
       }
     );
-    console.log(pokemons);
+    console.log("pokemons", pokemons);
     onChangeHandler(pokemons);
   })
 }

@@ -1,8 +1,8 @@
 port module Main exposing (main)
 
 import Browser
-import Html exposing (Html, button, div, h2, hr, li, text, ul)
-import Html.Attributes exposing (style)
+import Html exposing (Html, button, div, h2, hr, img, li, p, text, ul)
+import Html.Attributes exposing (class, src, style)
 import Html.Events exposing (onClick)
 
 
@@ -20,9 +20,19 @@ main =
 -- MODEL
 
 
+type alias Item =
+    { name : String
+    , imageUrl : String
+    }
+
+
 type alias Pokemon =
     { id : String
     , name : String
+    , imageUrl : String
+    , ability : String
+    , moves : List String
+    , item : Item
     }
 
 
@@ -141,30 +151,38 @@ subscriptions _ =
 -- VIEW
 
 
-battleTeamMembersDisplayList : List BattleTeamMember -> List (Html msg)
-battleTeamMembersDisplayList battleTeamMembers =
-    [ ul
-        []
+battleTeamMembersDisplay : List BattleTeamMember -> List (Html msg)
+battleTeamMembersDisplay battleTeamMembers =
+    [ div
+        [ class "battleTeamMembersDisplay" ]
         (List.map
-            (\battleTeamMember ->
-                li
-                    [ style "text-decoration-line"
-                        (if battleTeamMember.living then
-                            "none"
-
-                         else
-                            "line-through"
-                        )
-                    ]
-                    [ text battleTeamMember.teamMember.pokemon.name ]
-            )
+            battleTeamMembersDisplayItem
             battleTeamMembers
         )
     ]
 
 
-battleTeamMembersControlList : List BattleTeamMember -> List (Html Msg)
-battleTeamMembersControlList battleTeamMembers =
+battleTeamMembersDisplayItem : BattleTeamMember -> Html msg
+battleTeamMembersDisplayItem battleTeamMember =
+    div
+        [ class "battleTeamMembersDisplayItem" ]
+        [ div
+            [ class "pokemonImage" ]
+            [ img [ src battleTeamMember.teamMember.pokemon.imageUrl ] [] ]
+        , div
+            [ class "pokemonDetail" ]
+            [ div
+                [ class "pokemonAbstruct" ]
+                [ div [ class "pokemonName" ] [ text battleTeamMember.teamMember.pokemon.name ]
+                , div [ class "pokemonAbility" ] [ text battleTeamMember.teamMember.pokemon.ability ]
+                , div [ class "pokemonItemName" ] [ text battleTeamMember.teamMember.pokemon.item.name ]
+                ]
+            ]
+        ]
+
+
+battleTeamMembersControl : List BattleTeamMember -> List (Html Msg)
+battleTeamMembersControl battleTeamMembers =
     [ h2 [] [ text "選出パーティ管理" ]
     , ul
         []
@@ -182,8 +200,8 @@ battleTeamMembersControlList battleTeamMembers =
     ]
 
 
-teamMembersControlList : List TeamMember -> List (Html Msg)
-teamMembersControlList teamMembers =
+teamMembersControl : List TeamMember -> List (Html Msg)
+teamMembersControl teamMembers =
     [ h2 [] [ text "パーティ管理" ]
     , ul
         []
@@ -199,8 +217,8 @@ teamMembersControlList teamMembers =
     ]
 
 
-pokemonsControlList : List Pokemon -> List (Html Msg)
-pokemonsControlList pokemons =
+pokemonsControl : List Pokemon -> List (Html Msg)
+pokemonsControl pokemons =
     [ h2 [] [ text "ポケモン管理" ]
     , ul
         []
@@ -219,15 +237,15 @@ pokemonsControlList pokemons =
 view : Model -> Html Msg
 view model =
     div []
-        [ div []
-            (battleTeamMembersDisplayList model.battleTeamMembers)
+        [ div [ class "battleTeamMembersDisplayContainer" ]
+            (battleTeamMembersDisplay model.battleTeamMembers)
         , hr [] []
         , div []
-            (battleTeamMembersControlList model.battleTeamMembers)
+            (battleTeamMembersControl model.battleTeamMembers)
         , hr [] []
         , div []
-            (teamMembersControlList model.teamMembers)
+            (teamMembersControl model.teamMembers)
         , hr [] []
         , div []
-            (pokemonsControlList model.pokemons)
+            (pokemonsControl model.pokemons)
         ]
