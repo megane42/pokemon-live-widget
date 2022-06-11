@@ -33,6 +33,7 @@ type alias Pokemon =
     , imageUrl : String
     , ability : String
     , moves : List String
+    , types : List String
     , item : Item
     }
 
@@ -211,7 +212,10 @@ battleTeamMembersDisplayItem pokemonDetail battleTeamMember =
                 [ class "pokemonAbstruct"
                 , class (pokemonDetailActiveness Abstruct pokemonDetail)
                 ]
-                [ div [ class "pokemonName" ] [ text battleTeamMember.teamMember.pokemon.name ]
+                [ div [ class "pokemonNameAndTypes" ]
+                    [ div [ class "pokemonName" ] [ text battleTeamMember.teamMember.pokemon.name ]
+                    , div [ class "pokemonType" ] [ text (String.join " / " battleTeamMember.teamMember.pokemon.types) ]
+                    ]
                 , div [ class "pokemonAbility" ] [ text battleTeamMember.teamMember.pokemon.ability ]
                 , div [ class "pokemonItemName" ] [ text battleTeamMember.teamMember.pokemon.item.name ]
                 ]
