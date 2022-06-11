@@ -294,6 +294,7 @@ battleTeamMembersDisplay pokemonDetail battleTeamMembers =
             |> List.sortBy .order
             |> List.map
                 (battleTeamMembersDisplayItem pokemonDetail)
+            |> List.intersperse ( "", div [ class "battleTeamMembersDisplayItemSepareter" ] [] )
         )
     ]
 
@@ -312,14 +313,12 @@ battleTeamMembersDisplayItem pokemonDetail battleTeamMember =
                 [ class "pokemonAbstruct"
                 , class (convertPokemonDetailCategoryToClass Abstruct pokemonDetail)
                 ]
-                [ div [ class "pokemonNameAndTypes" ]
-                    [ div [ class "pokemonName" ] [ text battleTeamMember.teamMember.pokemon.name ]
-                    , div [ class "pokemonTypes" ]
-                        (List.map
-                            (\pokemonType -> span [ class "pokemonType", class (convertPokemonTypeToClass pokemonType) ] [ text pokemonType ])
-                            battleTeamMember.teamMember.pokemon.types
-                        )
-                    ]
+                [ div [ class "pokemonName" ] [ text battleTeamMember.teamMember.pokemon.name ]
+                , div [ class "pokemonTypes" ]
+                    (List.map
+                        (\pokemonType -> span [ class "pokemonType", class (convertPokemonTypeToClass pokemonType) ] [ text pokemonType ])
+                        battleTeamMember.teamMember.pokemon.types
+                    )
                 , div [ class "pokemonAbility" ] [ text battleTeamMember.teamMember.pokemon.ability ]
                 , div [ class "pokemonItemName" ] [ text battleTeamMember.teamMember.pokemon.item.name ]
                 ]
