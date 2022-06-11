@@ -4,6 +4,7 @@ import Browser
 import Html exposing (Html, button, div, h2, hr, img, li, p, span, text, ul)
 import Html.Attributes exposing (class, src, style)
 import Html.Events exposing (onClick)
+import Html.Keyed as Keyed
 import Time
 
 
@@ -66,6 +67,37 @@ type alias Model =
     }
 
 
+battleTeamMemberPlaceHolder : String -> Int -> BattleTeamMember
+battleTeamMemberPlaceHolder id order =
+    { id = id
+    , living = True
+    , order = order
+    , teamMember =
+        { id = ""
+        , pokemon =
+            { id = ""
+            , name = "???"
+            , imageUrl = "https://static.thenounproject.com/png/1455777-200.png"
+            , ability = "???"
+            , moves = [ "???", "???", "???", "???" ]
+            , types = [ "???" ]
+            , item =
+                { name = ""
+                , imageUrl = ""
+                }
+            }
+        }
+    }
+
+
+battleTeamMemberPlaceHolders : List BattleTeamMember
+battleTeamMemberPlaceHolders =
+    [ battleTeamMemberPlaceHolder "1" 999
+    , battleTeamMemberPlaceHolder "2" 999
+    , battleTeamMemberPlaceHolder "3" 999
+    ]
+
+
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( { battleTeamMembers = []
@@ -98,7 +130,14 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         GetBattleTeamMembers newBattleTeamMembers ->
-            ( { model | battleTeamMembers = newBattleTeamMembers }, Cmd.none )
+            ( { model
+                | battleTeamMembers =
+                    battleTeamMemberPlaceHolders
+                        |> List.append newBattleTeamMembers
+                        |> List.take 3
+              }
+            , Cmd.none
+            )
 
         GetTeamMembers newTeamMembers ->
             ( { model | teamMembers = newTeamMembers }, Cmd.none )
@@ -249,7 +288,7 @@ convertPokemonTypeToClass pokemonType =
 
 battleTeamMembersDisplay : PokemonDetailCategory -> List BattleTeamMember -> List (Html msg)
 battleTeamMembersDisplay pokemonDetail battleTeamMembers =
-    [ div
+    [ Keyed.node "div"
         [ class "battleTeamMembersDisplay" ]
         (battleTeamMembers
             |> List.sortBy .order
@@ -259,9 +298,10 @@ battleTeamMembersDisplay pokemonDetail battleTeamMembers =
     ]
 
 
-battleTeamMembersDisplayItem : PokemonDetailCategory -> BattleTeamMember -> Html msg
+battleTeamMembersDisplayItem : PokemonDetailCategory -> BattleTeamMember -> ( String, Html msg )
 battleTeamMembersDisplayItem pokemonDetail battleTeamMember =
-    div
+    ( battleTeamMember.id
+    , div
         [ class "battleTeamMembersDisplayItem" ]
         [ div
             [ class "pokemonImage", class (convertPokemonLivenessToClass battleTeamMember.living) ]
@@ -295,6 +335,7 @@ battleTeamMembersDisplayItem pokemonDetail battleTeamMember =
                 )
             ]
         ]
+    )
 
 
 battleTeamMembersControl : List BattleTeamMember -> List (Html Msg)
