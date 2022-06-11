@@ -11,11 +11,13 @@ body {
 .battleTeamMembersDisplay {
     display: flex;
     justify-content: space-around;
+    color: #ffffff;
+    margin-bottom: 64px;
 }
 
 .battleTeamMembersDisplayItem {
     display: flex;
-    width: 33%;
+    width: 30%;
     animation: appendWithAnimate .5s ease;
 }
 
@@ -29,12 +31,12 @@ body {
 }
 
 .pokemonImage {
-    flex-basis: 40%;
+    flex-basis: 45%;
 }
 
 .pokemonImage img {
     width: 100%;
-    padding-right: 2em;
+    padding-right: 1em;
 }
 
 .pokemonImage.pokemonLiving img {
@@ -43,7 +45,7 @@ body {
 }
 
 .pokemonImage.pokemonDead img {
-    filter: grayscale(100%) contrast(50%) brightness(125%);
+    filter: grayscale(100%) contrast(50%) brightness(75%);
     transition: filter .25s ease;
 }
 
