@@ -168,6 +168,15 @@ subscriptions _ =
 -- VIEW
 
 
+pokemonLiveness : Bool -> String
+pokemonLiveness living =
+    if living then
+        "pokemonLiving"
+
+    else
+        "pokemonDead"
+
+
 pokemonDetailActiveness : PokemonDetailCategory -> PokemonDetailCategory -> String
 pokemonDetailActiveness expected actual =
     if expected == actual then
@@ -193,7 +202,7 @@ battleTeamMembersDisplayItem pokemonDetail battleTeamMember =
     div
         [ class "battleTeamMembersDisplayItem" ]
         [ div
-            [ class "pokemonImage" ]
+            [ class "pokemonImage", class (pokemonLiveness battleTeamMember.living) ]
             [ img [ src battleTeamMember.teamMember.pokemon.imageUrl ] [] ]
         , div
             [ class "pokemonDetail" ]
