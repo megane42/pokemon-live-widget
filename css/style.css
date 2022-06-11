@@ -21,22 +21,40 @@ body {
     border-style: solid;
 }
 
-.battleTeamMembersDisplayItem .pokemonImage {
+.pokemonImage {
     width: 40%;
 }
 
-.battleTeamMembersDisplayItem .pokemonImage img {
+.pokemonImage img {
     width: 90%;
 }
 
-.battleTeamMembersDisplayItem .pokemonDetail {
+.pokemonDetail {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    font-size: 2em;
+    font-size: 1.5vw;
 }
 
-.battleTeamMembersDisplayItem .pokemonDetail .pokemonName {
+.pokemonDetail .pokemonAbstruct{
+    position: absolute;
+}
+
+.pokemonDetail .pokemonAbstruct .pokemonName {
     font-size: 1.5em;
     font-weight: 900;
+}
+
+.pokemonDetail .pokemonMoves{
+    position: absolute;
+}
+
+.pokemonDetail .pokemonDetailActive {
+    opacity: 1;
+    transition: opacity .5s ease;
+}
+
+.pokemonDetail .pokemonDetailHidden {
+    opacity: 0;
+    transition: opacity .5s ease;
 }

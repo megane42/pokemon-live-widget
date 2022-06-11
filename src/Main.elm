@@ -4,6 +4,7 @@ import Browser
 import Html exposing (Html, button, div, h2, hr, img, li, p, text, ul)
 import Html.Attributes exposing (class, src, style)
 import Html.Events exposing (onClick)
+import Time
 
 
 main : Program () Model Msg
@@ -50,11 +51,17 @@ type alias BattleTeamMember =
     }
 
 
+type PokemonDetailCategory
+    = Abstruct
+    | Moves
+
+
 type alias Model =
     { battleTeamMembers : List BattleTeamMember
     , teamMembers : List TeamMember
     , pokemons : List Pokemon
     , pickIndex : Int
+    , pokemonDetail : PokemonDetailCategory
     }
 
 
@@ -64,6 +71,7 @@ init _ =
       , teamMembers = []
       , pokemons = []
       , pickIndex = 1
+      , pokemonDetail = Abstruct
       }
     , Cmd.none
     )
@@ -82,6 +90,7 @@ type Msg
     | ResetBattleTeamMember
     | PickTeamMemberAsBattleTeamMember TeamMember
     | PickPokemonAsTeamMember Pokemon
+    | SwitchPokemonDetail Time.Posix
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -110,6 +119,13 @@ update msg model =
 
         PickPokemonAsTeamMember pokemon ->
             ( model, setTeamMember (TeamMember "__RANDOM_ID__" pokemon) )
+
+        SwitchPokemonDetail _ ->
+            if model.pokemonDetail == Abstruct then
+                ( { model | pokemonDetail = Moves }, Cmd.none )
+
+            else
+                ( { model | pokemonDetail = Abstruct }, Cmd.none )
 
 
 
@@ -144,6 +160,7 @@ subscriptions _ =
         [ getBattleTeamMembers GetBattleTeamMembers
         , getTeamMembers GetTeamMembers
         , getPokemons GetPokemons
+        , Time.every 5000 SwitchPokemonDetail
         ]
 
 
@@ -151,19 +168,28 @@ subscriptions _ =
 -- VIEW
 
 
-battleTeamMembersDisplay : List BattleTeamMember -> List (Html msg)
-battleTeamMembersDisplay battleTeamMembers =
+pokemonDetailActiveness : PokemonDetailCategory -> PokemonDetailCategory -> String
+pokemonDetailActiveness expected actual =
+    if expected == actual then
+        "pokemonDetailActive"
+
+    else
+        "pokemonDetailHidden"
+
+
+battleTeamMembersDisplay : PokemonDetailCategory -> List BattleTeamMember -> List (Html msg)
+battleTeamMembersDisplay pokemonDetail battleTeamMembers =
     [ div
         [ class "battleTeamMembersDisplay" ]
         (List.map
-            battleTeamMembersDisplayItem
+            (battleTeamMembersDisplayItem pokemonDetail)
             battleTeamMembers
         )
     ]
 
 
-battleTeamMembersDisplayItem : BattleTeamMember -> Html msg
-battleTeamMembersDisplayItem battleTeamMember =
+battleTeamMembersDisplayItem : PokemonDetailCategory -> BattleTeamMember -> Html msg
+battleTeamMembersDisplayItem pokemonDetail battleTeamMember =
     div
         [ class "battleTeamMembersDisplayItem" ]
         [ div
@@ -172,11 +198,23 @@ battleTeamMembersDisplayItem battleTeamMember =
         , div
             [ class "pokemonDetail" ]
             [ div
-                [ class "pokemonAbstruct" ]
+                [ class "pokemonAbstruct"
+                , class (pokemonDetailActiveness Abstruct pokemonDetail)
+                ]
                 [ div [ class "pokemonName" ] [ text battleTeamMember.teamMember.pokemon.name ]
                 , div [ class "pokemonAbility" ] [ text battleTeamMember.teamMember.pokemon.ability ]
                 , div [ class "pokemonItemName" ] [ text battleTeamMember.teamMember.pokemon.item.name ]
                 ]
+            , div
+                [ class "pokemonMoves"
+                , class (pokemonDetailActiveness Moves pokemonDetail)
+                ]
+                (List.map
+                    (\move ->
+                        div [ class "pokemonMove" ] [ text move ]
+                    )
+                    battleTeamMember.teamMember.pokemon.moves
+                )
             ]
         ]
 
@@ -238,7 +276,7 @@ view : Model -> Html Msg
 view model =
     div []
         [ div [ class "battleTeamMembersDisplayContainer" ]
-            (battleTeamMembersDisplay model.battleTeamMembers)
+            (battleTeamMembersDisplay model.pokemonDetail model.battleTeamMembers)
         , hr [] []
         , div []
             (battleTeamMembersControl model.battleTeamMembers)
