@@ -1,7 +1,7 @@
 port module Main exposing (main)
 
 import Browser
-import Html exposing (Html, button, div, h2, hr, img, li, p, text, ul)
+import Html exposing (Html, button, div, h2, hr, img, li, p, span, text, ul)
 import Html.Attributes exposing (class, src, style)
 import Html.Events exposing (onClick)
 import Time
@@ -169,8 +169,8 @@ subscriptions _ =
 -- VIEW
 
 
-pokemonLiveness : Bool -> String
-pokemonLiveness living =
+convertPokemonLivenessToClass : Bool -> String
+convertPokemonLivenessToClass living =
     if living then
         "pokemonLiving"
 
@@ -178,13 +178,73 @@ pokemonLiveness living =
         "pokemonDead"
 
 
-pokemonDetailActiveness : PokemonDetailCategory -> PokemonDetailCategory -> String
-pokemonDetailActiveness expected actual =
+convertPokemonDetailCategoryToClass : PokemonDetailCategory -> PokemonDetailCategory -> String
+convertPokemonDetailCategoryToClass expected actual =
     if expected == actual then
         "pokemonDetailActive"
 
     else
         "pokemonDetailHidden"
+
+
+convertPokemonTypeToClass : String -> String
+convertPokemonTypeToClass pokemonType =
+    if pokemonType == "ノーマル" then
+        "normal"
+
+    else if pokemonType == "ほのお" then
+        "fire"
+
+    else if pokemonType == "みず" then
+        "water"
+
+    else if pokemonType == "くさ" then
+        "grass"
+
+    else if pokemonType == "でんき" then
+        "electric"
+
+    else if pokemonType == "こおり" then
+        "ice"
+
+    else if pokemonType == "かくとう" then
+        "fighting"
+
+    else if pokemonType == "どく" then
+        "poison"
+
+    else if pokemonType == "じめん" then
+        "ground"
+
+    else if pokemonType == "ひこう" then
+        "flying"
+
+    else if pokemonType == "エスパー" then
+        "psychic"
+
+    else if pokemonType == "むし" then
+        "bug"
+
+    else if pokemonType == "いわ" then
+        "rock"
+
+    else if pokemonType == "ゴースト" then
+        "ghost"
+
+    else if pokemonType == "ドラゴン" then
+        "dragon"
+
+    else if pokemonType == "あく" then
+        "dark"
+
+    else if pokemonType == "はがね" then
+        "steel"
+
+    else if pokemonType == "フェアリー" then
+        "fairy"
+
+    else
+        "default"
 
 
 battleTeamMembersDisplay : PokemonDetailCategory -> List BattleTeamMember -> List (Html msg)
@@ -204,24 +264,28 @@ battleTeamMembersDisplayItem pokemonDetail battleTeamMember =
     div
         [ class "battleTeamMembersDisplayItem" ]
         [ div
-            [ class "pokemonImage", class (pokemonLiveness battleTeamMember.living) ]
+            [ class "pokemonImage", class (convertPokemonLivenessToClass battleTeamMember.living) ]
             [ img [ src battleTeamMember.teamMember.pokemon.imageUrl ] [] ]
         , div
             [ class "pokemonDetail" ]
             [ div
                 [ class "pokemonAbstruct"
-                , class (pokemonDetailActiveness Abstruct pokemonDetail)
+                , class (convertPokemonDetailCategoryToClass Abstruct pokemonDetail)
                 ]
                 [ div [ class "pokemonNameAndTypes" ]
                     [ div [ class "pokemonName" ] [ text battleTeamMember.teamMember.pokemon.name ]
-                    , div [ class "pokemonType" ] [ text (String.join " / " battleTeamMember.teamMember.pokemon.types) ]
+                    , div [ class "pokemonTypes" ]
+                        (List.map
+                            (\pokemonType -> span [ class "pokemonType", class (convertPokemonTypeToClass pokemonType) ] [ text pokemonType ])
+                            battleTeamMember.teamMember.pokemon.types
+                        )
                     ]
                 , div [ class "pokemonAbility" ] [ text battleTeamMember.teamMember.pokemon.ability ]
                 , div [ class "pokemonItemName" ] [ text battleTeamMember.teamMember.pokemon.item.name ]
                 ]
             , div
                 [ class "pokemonMoves"
-                , class (pokemonDetailActiveness Moves pokemonDetail)
+                , class (convertPokemonDetailCategoryToClass Moves pokemonDetail)
                 ]
                 (List.map
                     (\move ->

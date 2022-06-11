@@ -51,8 +51,115 @@ body {
 }
 
 .pokemonDetail .pokemonAbstruct .pokemonName {
-    font-size: 1.5em;
+    font-size: 1.75em;
     font-weight: 900;
+}
+
+.pokemonDetail .pokemonAbstruct .pokemonTypes {
+    font-size: 0.6em;
+    margin-bottom: 0.5em;
+}
+
+.pokemonDetail .pokemonAbstruct .pokemonTypes .pokemonType {
+    margin-right: 0.5em;
+    padding-right: 0.5em;
+    padding-left: 0.5em;
+    border-radius: 10px;
+}
+
+.pokemonDetail .pokemonAbstruct .pokemonTypes .pokemonType.normal {
+    background-color: #919AA2;
+    color: #ffffff;
+}
+
+.pokemonDetail .pokemonAbstruct .pokemonTypes .pokemonType.fire {
+    background-color: #FF9741;
+    color: #ffffff;
+}
+
+.pokemonDetail .pokemonAbstruct .pokemonTypes .pokemonType.water {
+    background-color: #3692DC;
+    color: #ffffff;
+}
+
+.pokemonDetail .pokemonAbstruct .pokemonTypes .pokemonType.grass {
+    background-color: #38BF4B;
+    color: #ffffff;
+}
+
+.pokemonDetail .pokemonAbstruct .pokemonTypes .pokemonType.electric {
+    background-color: #FBD100;
+    color: #ffffff;
+}
+
+.pokemonDetail .pokemonAbstruct .pokemonTypes .pokemonType.ice {
+    background-color: #4CD1C0;
+    color: #ffffff;
+}
+
+.pokemonDetail .pokemonAbstruct .pokemonTypes .pokemonType.fighting {
+    background-color: #E0306A;
+    color: #ffffff;
+}
+
+.pokemonDetail .pokemonAbstruct .pokemonTypes .pokemonType.poison {
+    background-color: #B567CE;
+    color: #ffffff;
+}
+
+.pokemonDetail .pokemonAbstruct .pokemonTypes .pokemonType.ground {
+    background-color: #E87236;
+    color: #ffffff;
+}
+
+.pokemonDetail .pokemonAbstruct .pokemonTypes .pokemonType.flying {
+    background-color: #89AAE3;
+    color: #ffffff;
+}
+
+.pokemonDetail .pokemonAbstruct .pokemonTypes .pokemonType.psychic {
+    background-color: #FF6675;
+    color: #ffffff;
+}
+
+.pokemonDetail .pokemonAbstruct .pokemonTypes .pokemonType.bug {
+    background-color: #83C300;
+    color: #ffffff;
+}
+
+.pokemonDetail .pokemonAbstruct .pokemonTypes .pokemonType.rock {
+    background-color: #C8B686;
+    color: #ffffff;
+}
+
+.pokemonDetail .pokemonAbstruct .pokemonTypes .pokemonType.ghost {
+    background-color: #4C6AB2;
+    color: #ffffff;
+}
+
+.pokemonDetail .pokemonAbstruct .pokemonTypes .pokemonType.dragon {
+    background-color: #006FC9;
+    color: #ffffff;
+}
+
+.pokemonDetail .pokemonAbstruct .pokemonTypes .pokemonType.dark {
+    background-color: #5B5466;
+    color: #ffffff;
+}
+
+.pokemonDetail .pokemonAbstruct .pokemonTypes .pokemonType.steel {
+    background-color: #5A8EA2;
+    color: #ffffff;
+}
+
+.pokemonDetail .pokemonAbstruct .pokemonTypes .pokemonType.fairy {
+    background-color: #FB89EB;
+    color: #ffffff;
+}
+
+.pokemonDetail .pokemonAbstruct .pokemonTypes .pokemonType.default {
+    background-color: #333333;
+    color: #ffffff;
 }
 
 .pokemonDetail .pokemonMoves{
