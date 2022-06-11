@@ -16,9 +16,16 @@ body {
 .battleTeamMembersDisplayItem {
     display: flex;
     width: 33%;
+    animation: appendWithAnimate .25s ease;
+}
 
-    border: 1px;
-    border-style: solid;
+@keyframes appendWithAnimate {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 .pokemonImage {
